@@ -408,9 +408,7 @@ export const newField = ({ key, displayName, type }: any) => {
     }
 }
 
-export const fieldTypes = () => {
-    return [
-        { label: 'Texto', value: 'TEXT' },
-        { label: 'Número', value: 'NUMBER' },
-    ]
-}
+export const fieldTypes = [
+    { id: 0, label: 'Texto', value: 'TEXT' },
+    { id: 1, label: 'Número', value: 'NUMBER' },
+]
