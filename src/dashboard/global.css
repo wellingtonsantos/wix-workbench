@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .draggable {
+        top: auto !important;
+        left: auto !important;
+    }
+}
