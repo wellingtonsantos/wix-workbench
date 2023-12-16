@@ -400,11 +400,13 @@ export const data = () => {
     }
 }
 
-export const newField = ({ key, displayName, type }: any) => {
+export const newField = (field: any) => {
+    const { key, displayName, type } = field
     return {
         key,
         displayName: displayName ? displayName : key,
         type: type ? type : 'UNKNOWN_FIELD_TYPE',
+        ...field
     }
 }
 

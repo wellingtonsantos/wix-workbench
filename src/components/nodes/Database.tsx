@@ -8,42 +8,41 @@ import { Heading, Text, CustomModalLayout, Modal, Input, Dropdown, FormField } f
 
 import Fields from './components/Fields';
 import { newField, fieldTypes } from '../../dashboard/data';
+import { toCamelCaseString } from './utils/camelCase';
 
 export default function Square(props: NodeProps) {
     const [data, setData] = useState(props.data);
     const [shown, setShown] = useState(false);
-    const [field, setField] = useState(null)
+    const [field, setField] = useState({ key: '', displayName: '', type: '' })
+    const [fieldError, setFieldError] = useState('')
 
-    function handleOnDragEnd(result:any) {
-        if(!result.destination) return;
+    function handleOnDragEnd(result: any) {
+        if (!result.destination) return;
         const items = data.fields
         const [reorderedItem] = items.splice(result.source.index, 1)
         items.splice(result.destination.index, 0, reorderedItem)
 
-        setData({...data, fields: items})
+        setData({ ...data, fields: items })
     }
 
     function addField() {
         try {
-            if(!field) {
-                throw new Error('Erro ao salvar!');
-            }
-            if(!field.key) {
-                throw new Error('O id do campo é obrigátorio!');
-            }
-            if(!field.displayName) {
-                throw new Error('O nomde do campo é obrigátorio!');
-            }
-            if(!field.type) {
+            if (!field.type) {
                 throw new Error('O tipo do campo é obrigátorio!');
             }
+            if (!field.displayName) {
+                throw new Error('O nome do campo é obrigátorio!');
+            }
+            if (!field.key) {
+                throw new Error('O id do campo é obrigátorio!');
+            }
 
-            const newF = newField({key, displayName, type})
-            setData({...data, fields: [...data.fields, newF]})
-            console.log(data.fields)
+            const newFieldData = newField(field)
+            setData({ ...data, fields: [...data.fields, newFieldData] })
             setShown(false)
+            setField({ key: '', displayName: '', type: '' })
         } catch (error) {
-            return error
+            setFieldError(String(error))
         }
     }
 
@@ -83,15 +82,25 @@ export default function Square(props: NodeProps) {
                             content={
                                 <div className='flex flex-col gap-4'>
                                     <FormField id='type' label='Selecione o tipo do campo' labelPlacement='top'>
-                                        <Dropdown id='type' size='medium' placeholder='Selecione o tipo do campo' options={fieldTypes} required={true} />
+                                        <Dropdown onSelect={(e) => { setField({ ...field, type: e.value }) }} id='type' size='medium' placeholder='Selecione o tipo do campo' options={fieldTypes} required={true} />
                                     </FormField>
                                     <FormField id='displayName' label='Nome do campo' labelPlacement='top'>
-                                        <Input id='displayName' size='medium' placeholder='Nome do campo' required={true} />
+                                        <Input value={field.displayName} onChange={({ target }) => {
+                                            setField({ 
+                                                ...field, 
+                                                key: toCamelCaseString(target.value), 
+                                                displayName: target.value
+                                            })
+                                        }} id='displayName' size='medium' placeholder='Nome do campo' required={true} />
                                     </FormField>
                                     <FormField id='key' label='ID do campo' labelPlacement='top'>
-                                        <Input id='key' size='medium' placeholder='ID do campo' required={true} />
+                                        <Input value={field.key} onChange={({ target }) => { setField({ ...field, key: target.value }) }} id='key' size='medium' placeholder='ID do campo' required={true} />
                                     </FormField>
                                 </div>
+                            }
+                            footnote={
+                                fieldError &&
+                                <p>{fieldError}</p>
                             }
                         />
                     </Modal>
