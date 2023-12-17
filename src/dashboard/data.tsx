@@ -410,6 +410,25 @@ export const newField = (field: any) => {
     }
 }
 
+export const newCollection = (collectionName: string, collectionId?: string) => {
+    return {
+        collection: {
+            id: collectionId ? collectionId : collectionName.replaceAll(' ', '').toLowerCase(),
+            displayName: collectionName,
+            fields: [{
+                key: 'title',
+                type: 'TEXT',
+            }],
+            permissions: {
+                insert: 'ADMIN',
+                update: 'ADMIN',
+                remove: 'ADMIN',
+                read: 'ADMIN'
+            }
+        }
+    }
+}
+
 export const fieldTypes = [
     { id: 0, label: 'Texto', value: 'TEXT' },
     { id: 1, label: 'Número', value: 'NUMBER' },

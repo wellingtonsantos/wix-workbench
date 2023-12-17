@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import Field from './Field';
 
-export default function Square(props: any) {
-    const [fields, setFields] = useState(props.fields);
+export default function Square({ dataFields, dataCollectionId }: any) {
+    const [fields, setFields] = useState(dataFields);
 
     useEffect(() => {
-        setFields(props.fields)
+        setFields(fields)
     });
 
     return (
@@ -15,7 +15,7 @@ export default function Square(props: any) {
                 <div {...provided.droppableProps} ref={provided.innerRef}>
                     {
                         fields.map((field: any, index: any) => {
-                            return <Field key={index} field={field} index={index} />
+                            return <Field key={index} field={field} index={index} dataCollectionId={dataCollectionId} />
                         })
                     }
                 </div>
